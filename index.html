@@ -1,157 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Be My Valentine 💘</title>
+<meta charset="UTF-8">
+<title>Be My Valentine 💘</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(135deg, #ffd6e8, #ffeef6);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+<style>
+    body {
+        margin: 0;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        background: linear-gradient(135deg, #ffd6e8, #ffeef6);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
 
-        /* Floating hearts */
-        .heart {
-            position: absolute;
-            bottom: -20px;
-            color: #ff4d88;
-            font-size: 20px;
-            animation: floatUp 6s linear infinite;
-            opacity: 0.8;
-        }
+    /* Floating hearts */
+    .heart {
+        position: absolute;
+        bottom: -20px;
+        color: #ff4d88;
+        animation: floatUp 6s linear infinite;
+        opacity: 0.8;
+        z-index: 1;
+    }
 
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(-110vh) scale(1.5);
-                opacity: 0;
-            }
+    @keyframes floatUp {
+        from {
+            transform: translateY(0) scale(1);
+            opacity: 1;
         }
+        to {
+            transform: translateY(-120vh) scale(1.5);
+            opacity: 0;
+        }
+    }
 
-        .page {
-            display: none;
-            text-align: center;
-            z-index: 2;
-        }
+    .page {
+        display: none;
+        text-align: center;
+        z-index: 2;
+    }
 
-        .page.active {
-            display: block;
-        }
+    .page.active {
+        display: block;
+    }
 
-        h1 {
-            font-size: 2.5em;
-            color: #ff4d88;
-        }
+    h1 {
+        font-size: 2.5em;
+        color: #ff4d88;
+    }
 
-        button {
-            font-size: 1.2em;
-            padding: 12px 30px;
-            margin: 15px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+    button {
+        font-size: 1.2em;
+        padding: 12px 30px;
+        margin: 15px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.2s;
+    }
 
-        button:hover {
-            transform: scale(1.1);
-        }
+    button:hover {
+        transform: scale(1.1);
+    }
 
-        .yes {
-            background-color: #ff4d88;
-            color: white;
-        }
+    .yes {
+        background-color: #ff4d88;
+        color: white;
+    }
 
-        .no {
-            background-color: #aaa;
-            color: white;
-        }
+    .no {
+        background-color: #aaa;
+        color: white;
+        position: absolute;
+    }
 
-        .character {
-            font-size: 5em;
-        }
+    .cat {
+        font-size: 5em;
+    }
 
-        .flower {
-            font-size: 3em;
-        }
+    .flower {
+        font-size: 3em;
+    }
 
-        .small-text {
-            color: #666;
+    /* Confetti */
+    .confetti {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: red;
+        animation: confettiFall 3s linear forwards;
+        z-index: 3;
+    }
+
+    @keyframes confettiFall {
+        from {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
         }
-    </style>
+        to {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+</style>
 </head>
+
 <body>
 
-    <!-- Background music -->
-    <audio autoplay loop>
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
+<!-- Background Music -->
+<audio autoplay loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-    <!-- PAGE 1 -->
-    <div class="page active" id="page1">
-        <h1>Will you be my Valentine? 💖</h1>
-        <button class="yes" onclick="goYes()">Yes 💘</button>
-        <button class="no" onclick="goNo()">No 💔</button>
-    </div>
+<!-- PAGE 1 -->
+<div class="page active" id="page1">
+    <div class="cat">🐱</div>
+    <h1>Will you be my Valentine?</h1>
+    <button class="yes" onclick="goYes()">Yes 💖</button>
+    <button class="no" id="noBtn">No 💔</button>
+</div>
 
-    <!-- YES PAGE -->
-    <div class="page" id="pageYes">
-        <div class="character">🥰</div>
-        <div class="flower">🌸</div>
-        <h1>See you on 14 Feb 💐</h1>
-    </div>
+<!-- YES PAGE -->
+<div class="page" id="pageYes">
+    <div class="cat">😻</div>
+    <div class="flower">🌸</div>
+    <h1>See you on 14 Feb 💐</h1>
+</div>
 
-    <!-- NO PAGE -->
-    <div class="page" id="pageNo">
-        <h1>Try again… 😏</h1>
-        <p class="small-text">Redirecting...</p>
-    </div>
+<script>
+    // Page navigation
+    function goYes() {
+        showPage('pageYes');
+        launchConfetti();
+    }
 
-    <script>
-        function goYes() {
-            showPage('pageYes');
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    // Floating hearts
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '💗';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = (15 + Math.random() * 25) + 'px';
+        heart.style.animationDuration = (4 + Math.random() * 4) + 's';
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 7000);
+    }
+    setInterval(createHeart, 400);
+
+    // Runaway NO button
+    const noBtn = document.getElementById('noBtn');
+    noBtn.addEventListener('mouseover', moveNoButton);
+    noBtn.addEventListener('click', moveNoButton);
+
+    function moveNoButton() {
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 50);
+        noBtn.style.left = x + 'px';
+        noBtn.style.top = y + 'px';
+    }
+
+    // Confetti explosion
+    function launchConfetti() {
+        for (let i = 0; i < 120; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-10px';
+            confetti.style.backgroundColor =
+                `hsl(${Math.random() * 360}, 100%, 60%)`;
+            confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+            document.body.appendChild(confetti);
+
+            setTimeout(() => confetti.remove(), 4000);
         }
-
-        function goNo() {
-            showPage('pageNo');
-            setTimeout(() => {
-                showPage('page1');
-            }, 2000);
-        }
-
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
-        }
-
-        // Create floating hearts
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.innerHTML = '💖';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = (15 + Math.random() * 25) + 'px';
-            heart.style.animationDuration = (4 + Math.random() * 4) + 's';
-            document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 7000);
-        }
-
-        setInterval(createHeart, 400);
-    </script>
+    }
+</script>
 
 </body>
 </html>
